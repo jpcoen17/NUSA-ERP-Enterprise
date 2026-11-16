@@ -9,6 +9,7 @@
 | 8 | 51 generic-record modules (add/edit/delete, audit log) | TESTING: DB tests done, browser verification pending |
 | 9 | Admin panel: users/access, RBAC view, audit trail (66-68) | TESTING: DB tests done, browser verification pending |
 | 10a | PWA (manifest, icons, safe service worker, install button), Vercel config, CI | Built; local preview verified; real deployment NOT yet done |
+| 10b | Approval workflow (58), Supply chain analytics (50), Business analytics (61), Data visualization (64), Custom reports + CSV (63) | 58/50/61/64 TESTING (DB-tested); 63 IN DEVELOPMENT (UI only) |
 | 4 | Auth + user management | Planned |
 | 5–11 | See master prompt | Planned |
 

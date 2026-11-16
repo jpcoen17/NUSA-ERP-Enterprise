@@ -21,3 +21,9 @@ Limits: field layout lives in the frontend (jsonb); money values in these module
 Admin list/grant/revoke/suspend work via SECURITY DEFINER RPCs that re-check is_admin() server-side. Verified: non-admin gets 0 rows / "forbidden"; admin cannot suspend self or revoke own access;
 suspended user loses all data access; duplicate grant is idempotent; branch must belong to company; anon denied; actions land in audit_logs.
 Not built: creating users from the admin UI (needs an Edge Function with the service role on the server), per-permission enforcement.
+
+## Approvals + analytics (modules 58, 50, 61, 64) — local test
+Verified: any user with company access can submit; requester cannot forge `requested_by`; non-admin sees only own requests; direct UPDATE denied;
+approve/reject only by Super Admin via function; cannot decide an already-decided request; cannot decide own request (separation of duties); anon denied;
+analytics/supply-chain RPCs run as SECURITY INVOKER (no-access user gets empty results). Not verified by a test: cancelling another user's request (guarded in the function by `requested_by = auth.uid()`).
+Not built: multi-step/threshold approval chains, notifications on decision.
