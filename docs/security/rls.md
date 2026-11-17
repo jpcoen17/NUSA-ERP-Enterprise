@@ -40,3 +40,9 @@ confirm reduces stock + creates invoice atomically; insufficient stock changes n
 overpayment rejected; ledger guard blocks direct edits of stock_qty / paid_amount even for Super Admin while normal edits (price, due date) still work; stock movements sum equals stock change.
 A bug found by these tests (guard evaluated the wrong column on invoices) was fixed before release.
 Limits: role checks are per company, not per branch; opening stock set at product creation has no movement entry; no purchase/goods-receipt flow yet; UI not tested live.
+
+## Purchasing (modules 16, 18) — tested on a FRESH database (8 migrations + all seeds), RLS on 22 of 22 tables
+PO create/approve/receive/cancel only through role-checked functions (company_admin / procurement_manager; receiving also inventory_manager). Verified: viewer/inventory cannot create,
+supplier from another company rejected, creator cannot approve own PO (Super Admin may), inventory cannot approve, only approved POs can be received, receipt adds stock + a 'purchase' movement
+and sets weighted-average cost (checked against the formula), receive twice / cancel received rejected, direct writes denied, stock_qty still guarded, ledger sums match, anon denied.
+Limits: full receipt only (no partial deliveries), no supplier invoice/payable generated yet, role checks per company not per branch, UI not tested live.

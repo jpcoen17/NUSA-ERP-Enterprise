@@ -10,6 +10,9 @@ export const FORMS: Record<string, { title: string; fields: Field[] }> = {
   customers: { title: "New customer", fields: [
     { key: "code", label: "Code", type: "text", required: true }, { key: "name", label: "Name", type: "text", required: true },
     { key: "email", label: "Email", type: "text" }, { key: "city", label: "City", type: "text" }] },
+  suppliers: { title: "New supplier", fields: [
+    { key: "code", label: "Code", type: "text", required: true }, { key: "name", label: "Name", type: "text", required: true },
+    { key: "email", label: "Email", type: "text" }, { key: "city", label: "City", type: "text" }] },
   products: { title: "New product", fields: [
     { key: "sku", label: "SKU", type: "text", required: true }, { key: "name", label: "Name", type: "text", required: true },
     { key: "category", label: "Category", type: "text" }, { key: "unit_price", label: "Unit price", type: "number", required: true },
