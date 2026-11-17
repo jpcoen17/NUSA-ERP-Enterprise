@@ -32,3 +32,11 @@ Not built: multi-step/threshold approval chains, notifications on decision.
 Passkey (Supabase beta/experimental) and TOTP MFA are called only from `src/services/auth.ts`. NOT tested live (needs a real Supabase project, browser and device).
 Passkeys must be enabled in Dashboard -> Authentication -> Configuration -> Passkeys. The MFA gate is enforced in the UI only; RLS does not check AAL2 yet.
 `log_auth_event` (module 40) tested locally: whitelist, 1/sec throttle, anon denied, only Super Admin can read, clients cannot insert into audit_logs. Events are client-reported (best effort).
+
+## Sales / stock / payments (modules 13, 8, 21) — tested on a FRESH database with all 7 migrations + all seeds
+RLS enabled on 19 of 19 public tables. Order items, stock movements and payments have no write policies: they change only through role-checked functions
+(create/confirm/deliver/cancel_sales_order, record_payment, adjust_stock). Verified: viewer/finance cannot create orders, sales cannot record payments, finance can;
+confirm reduces stock + creates invoice atomically; insufficient stock changes nothing; cancel (unpaid) restores stock and removes the invoice; cancel after payment rejected;
+overpayment rejected; ledger guard blocks direct edits of stock_qty / paid_amount even for Super Admin while normal edits (price, due date) still work; stock movements sum equals stock change.
+A bug found by these tests (guard evaluated the wrong column on invoices) was fixed before release.
+Limits: role checks are per company, not per branch; opening stock set at product creation has no movement entry; no purchase/goods-receipt flow yet; UI not tested live.

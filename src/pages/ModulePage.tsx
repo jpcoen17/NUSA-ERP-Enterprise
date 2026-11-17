@@ -2,6 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { MODULES } from "@/lib/modules";
 import RecordsPage from "@/pages/RecordsPage";
 import { MODULE_FORMS } from "@/lib/moduleForms";
+import SalesOrdersPage from "@/pages/SalesOrdersPage";
+import InvoicesPage from "@/pages/InvoicesPage";
 import PasskeysPage from "@/pages/PasskeysPage";
 import PasskeyStatusPage from "@/pages/PasskeyStatusPage";
 import MfaPage from "@/pages/MfaPage";
@@ -16,7 +18,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import OrgTablePage from "@/pages/OrgTablePage";
 import StatusBadge from "@/components/StatusBadge";
 
-const TABLES: Record<number, string> = { 2: "companies", 3: "branches", 8: "invoices", 11: "customers", 13: "sales_orders", 21: "products" };
+const TABLES: Record<number, string> = { 2: "companies", 3: "branches", 11: "customers", 21: "products" };
 
 export default function ModulePage() {
   const { no } = useParams();
@@ -28,9 +30,11 @@ export default function ModulePage() {
       <h1 className="mb-3 text-2xl font-semibold">{m.name}</h1>
       <StatusBadge status={m.status} />
       <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-6 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300">
-        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
+        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([8, 13, 40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
       </div>
       {m.no === 1 && <DashboardPage />}
+      {m.no === 8 && <InvoicesPage />}
+      {m.no === 13 && <SalesOrdersPage />}
       {m.no === 36 && <PasskeyStatusPage kind="fingerprint" />}
       {m.no === 37 && <PasskeyStatusPage kind="face" />}
       {m.no === 38 && <PasskeysPage />}
