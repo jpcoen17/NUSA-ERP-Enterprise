@@ -5,18 +5,20 @@ import { supabase } from "@/lib/supabase";
 interface Log { id: string; created_at: string; action: string; table_name: string | null; user_id: string | null; details: Record<string, unknown> | null }
 const PAGE = 25;
 
-export default function AuditPage() {
+export default function AuditPage({ prefix }: { prefix?: string }) {
   const [page, setPage] = useState(0);
   const { data, error, isLoading } = useQuery({
-    queryKey: ["audit", page],
-    queryFn: async () => { const r = await supabase!.from("audit_logs").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(page * PAGE, page * PAGE + PAGE - 1); if (r.error) throw new Error(r.error.message); return r; },
+    queryKey: ["audit", page, prefix],
+    queryFn: async () => { let q = supabase!.from("audit_logs").select("*", { count: "exact" });
+      if (prefix) q = q.like("action", `${prefix}%`);
+      const r = await q.order("created_at", { ascending: false }).range(page * PAGE, page * PAGE + PAGE - 1); if (r.error) throw new Error(r.error.message); return r; },
   });
   if (isLoading) return <p className="mt-6 text-sm">Loading…</p>;
   if (error) return <p className="mt-6 text-sm text-red-500">{(error as Error).message}</p>;
   const rows = (data?.data ?? []) as Log[];
   return (
     <div className="mt-6">
-      <h2 className="mb-2 font-semibold">Audit log <span className="text-xs font-normal text-slate-500">({data?.count ?? 0}, hanya Super Admin)</span></h2>
+      <h2 className="mb-2 font-semibold">{prefix ? "Authentication events (reported by the app)" : "Audit log"} <span className="text-xs font-normal text-slate-500">({data?.count ?? 0}, hanya Super Admin)</span></h2>
       {rows.length === 0 && <p className="text-sm text-slate-500">Tidak ada log yang boleh Anda lihat.</p>}
       {rows.length > 0 && (
         <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">

@@ -48,7 +48,10 @@ export default function LoginPage() {
           <button type="button" onClick={() => setMode(mode === "login" ? "register" : "login")}>{mode === "login" ? "Daftar akun" : "Kembali ke login"}</button>
           {mode === "login" && <button type="button" onClick={() => setMode("reset")}>Lupa password?</button>}
         </div>
-        <p className="text-[11px] text-slate-400">Login passkey/biometrik tersedia di Stage 10. Akun baru belum punya akses data sampai admin memberikannya.</p>
+        {mode === "login" && authService.passkeysSupported() && (
+          <button type="button" onClick={async () => { setMsg(null); try { await authService.signInWithPasskey(); } catch (e) { setMsg({ ok: false, text: (e as Error).message }); } }} className="w-full rounded-lg border border-accent py-2 text-sm font-medium text-accent">Masuk dengan passkey</button>
+        )}
+        <p className="text-[11px] text-slate-400">Passkey bersifat eksperimental dan hanya bisa dipakai setelah didaftarkan di Modul 38. Password tetap tersedia sebagai cadangan. Akun baru belum punya akses data sampai admin memberikannya.</p>
       </form>
     </div>
   );

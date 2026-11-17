@@ -2,6 +2,9 @@ import { Link, useParams } from "react-router-dom";
 import { MODULES } from "@/lib/modules";
 import RecordsPage from "@/pages/RecordsPage";
 import { MODULE_FORMS } from "@/lib/moduleForms";
+import PasskeysPage from "@/pages/PasskeysPage";
+import PasskeyStatusPage from "@/pages/PasskeyStatusPage";
+import MfaPage from "@/pages/MfaPage";
 import ApprovalPage from "@/pages/ApprovalPage";
 import AnalyticsPage from "@/pages/AnalyticsPage";
 import SupplyChainPage from "@/pages/SupplyChainPage";
@@ -25,9 +28,14 @@ export default function ModulePage() {
       <h1 className="mb-3 text-2xl font-semibold">{m.name}</h1>
       <StatusBadge status={m.status} />
       <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-6 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300">
-        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
+        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
       </div>
       {m.no === 1 && <DashboardPage />}
+      {m.no === 36 && <PasskeyStatusPage kind="fingerprint" />}
+      {m.no === 37 && <PasskeyStatusPage kind="face" />}
+      {m.no === 38 && <PasskeysPage />}
+      {m.no === 39 && <MfaPage />}
+      {m.no === 40 && <AuditPage prefix="auth_" />}
       {m.no === 50 && <SupplyChainPage />}
       {m.no === 58 && <ApprovalPage />}
       {m.no === 61 && <AnalyticsPage view="tables" />}

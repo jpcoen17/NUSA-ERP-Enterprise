@@ -27,3 +27,8 @@ Verified: any user with company access can submit; requester cannot forge `reque
 approve/reject only by Super Admin via function; cannot decide an already-decided request; cannot decide own request (separation of duties); anon denied;
 analytics/supply-chain RPCs run as SECURITY INVOKER (no-access user gets empty results). Not verified by a test: cancelling another user's request (guarded in the function by `requested_by = auth.uid()`).
 Not built: multi-step/threshold approval chains, notifications on decision.
+
+## Passkeys / MFA / auth events (modules 36-40)
+Passkey (Supabase beta/experimental) and TOTP MFA are called only from `src/services/auth.ts`. NOT tested live (needs a real Supabase project, browser and device).
+Passkeys must be enabled in Dashboard -> Authentication -> Configuration -> Passkeys. The MFA gate is enforced in the UI only; RLS does not check AAL2 yet.
+`log_auth_event` (module 40) tested locally: whitelist, 1/sec throttle, anon denied, only Super Admin can read, clients cannot insert into audit_logs. Events are client-reported (best effort).
