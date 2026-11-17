@@ -2,6 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { MODULES } from "@/lib/modules";
 import RecordsPage from "@/pages/RecordsPage";
 import { MODULE_FORMS } from "@/lib/moduleForms";
+import InventoryPage from "@/pages/InventoryPage";
+import CashBankPage from "@/pages/CashBankPage";
 import GeneralLedgerPage from "@/pages/GeneralLedgerPage";
 import AccountsPayablePage from "@/pages/AccountsPayablePage";
 import FinancialReportingPage from "@/pages/FinancialReportingPage";
@@ -24,8 +26,8 @@ import OrgTablePage from "@/pages/OrgTablePage";
 import StatusBadge from "@/components/StatusBadge";
 
 // Modules with a dedicated page: the generic record store must NOT also render for them.
-const CUSTOM = new Set([6, 7, 10, 18]);
-const TABLES: Record<number, string> = { 2: "companies", 3: "branches", 11: "customers", 16: "suppliers", 21: "products" };
+const CUSTOM = new Set([6, 7, 9, 10, 18]);
+const TABLES: Record<number, string> = { 2: "companies", 3: "branches", 11: "customers", 16: "suppliers" };
 
 export default function ModulePage() {
   const guest = useGuest();
@@ -38,9 +40,11 @@ export default function ModulePage() {
       <h1 className="mb-3 text-2xl font-semibold">{m.name}</h1>
       <StatusBadge status={m.status} />
       <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-6 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300">
-        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([6, 7, 8, 10, 13, 18, 40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
+        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([6, 7, 8, 9, 10, 21, 13, 18, 40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
       </div>
       {m.no === 1 && <DashboardPage />}
+      {m.no === 9 && <CashBankPage />}
+      {m.no === 21 && <InventoryPage />}
       {m.no === 6 && <GeneralLedgerPage />}
       {m.no === 7 && <AccountsPayablePage />}
       {m.no === 10 && <FinancialReportingPage />}

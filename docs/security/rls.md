@@ -58,3 +58,7 @@ journals exist only for transactions after this migration plus the demo backfill
 ## Guest account (tested on fresh DB, 10 migrations)
 Guest = profile flag `is_guest` + Viewer role on demo companies. Verified: can read companies/customers/orders/journals/dashboard; every write path rejected (orders, payments, stock, journals, POs, direct inserts, approvals, flag change);
 sees no other users, no audit log; auth events not logged for guest; normal viewers unaffected. Residual risk: public credentials (password change / MFA enrolment via the Auth API) cannot be blocked from the database.
+
+## Expenses / cash / inventory UI (modules 9, 21) — tested on fresh DB (11 migrations), RLS on 26 of 26 tables
+`record_expense` inserts the expense and posts Dr Operating Expenses / Cr Cash in one transaction. Verified: expense total +750000, cash -750000, journal balanced; viewer, guest and sales forbidden; zero/negative amount and blank category rejected; anon denied.
+Stock adjustment UI uses the already-tested `adjust_stock` (inventory role OK, guest forbidden). Limits: UI not tested live; no bank reconciliation, transfers between accounts or returns yet.
