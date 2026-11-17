@@ -46,3 +46,11 @@ PO create/approve/receive/cancel only through role-checked functions (company_ad
 supplier from another company rejected, creator cannot approve own PO (Super Admin may), inventory cannot approve, only approved POs can be received, receipt adds stock + a 'purchase' movement
 and sets weighted-average cost (checked against the formula), receive twice / cancel received rejected, direct writes denied, stock_qty still guarded, ledger sums match, anon denied.
 Limits: full receipt only (no partial deliveries), no supplier invoice/payable generated yet, role checks per company not per branch, UI not tested live.
+
+## Accounting (modules 6, 7, 10) — tested on a FRESH database (9 migrations + all seeds), RLS on 26 of 26 tables
+Double-entry journals are posted only by internal triggers/functions (`_post` is not callable by users) and are append-only (corrections = reversal entries).
+Verified: demo backfill balanced and AR in the GL reconciles to outstanding invoices; confirm posts one 4-line balanced entry (AR/Revenue/COGS/Inventory, COGS = qty x cost);
+payment posts Dr Cash / Cr AR; cancel posts a reversal (net effect 0); PO receipt posts Dr Inventory / Cr AP and creates a bill; pay_bill (viewer forbidden, overpay rejected, partial -> paid) posts Dr AP / Cr Cash;
+manual journal: viewer forbidden, unbalanced rejected, balanced accepted; direct writes to journals/bills denied; a deferred DB constraint rejects an unbalanced entry even for a superuser; trial balance balanced; anon denied.
+Limits: fixed default chart of accounts; no tax, multi-currency, period closing or fixed assets; expenses created later do NOT auto-post (use a manual journal); demo backfill has no COGS;
+journals exist only for transactions after this migration plus the demo backfill; role checks per company not per branch; UI not tested live.

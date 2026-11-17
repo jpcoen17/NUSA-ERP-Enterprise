@@ -13,6 +13,7 @@
 | 11 | Passkey (36-38), MFA TOTP (39), auth events (40) | 36-39 IN DEVELOPMENT (untested live, passkey is beta); 40 TESTING |
 | 12 | Sales order items, auto stock deduction, invoices, payments, stock ledger, role checks (8, 13) | TESTING: tested on fresh DB; UI not tested live |
 | 13 | Suppliers (16), Purchase Orders with approval and goods receipt (18) | 18 TESTING (fresh-DB tests); 16 IN DEVELOPMENT; UI not tested live |
+| 14 | Double-entry GL with auto-posting, supplier bills/AP, manual journals, trial balance / P&L / balance sheet (6, 7, 10) | TESTING: fresh-DB tests pass; UI not tested live |
 | 4 | Auth + user management | Planned |
 | 5–11 | See master prompt | Planned |
 
