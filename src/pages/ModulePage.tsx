@@ -5,6 +5,7 @@ import { MODULE_FORMS } from "@/lib/moduleForms";
 import GeneralLedgerPage from "@/pages/GeneralLedgerPage";
 import AccountsPayablePage from "@/pages/AccountsPayablePage";
 import FinancialReportingPage from "@/pages/FinancialReportingPage";
+import { useGuest } from "@/hooks/useGuest";
 import PurchaseOrdersPage from "@/pages/PurchaseOrdersPage";
 import SalesOrdersPage from "@/pages/SalesOrdersPage";
 import InvoicesPage from "@/pages/InvoicesPage";
@@ -27,6 +28,7 @@ const CUSTOM = new Set([6, 7, 10, 18]);
 const TABLES: Record<number, string> = { 2: "companies", 3: "branches", 11: "customers", 16: "suppliers", 21: "products" };
 
 export default function ModulePage() {
+  const guest = useGuest();
   const { no } = useParams();
   const m = MODULES.find((x) => x.no === Number(no));
   if (!m) return <p>Module not found. <Link className="text-accent" to="/">Back to launcher</Link></p>;
@@ -47,8 +49,9 @@ export default function ModulePage() {
       {m.no === 13 && <SalesOrdersPage />}
       {m.no === 36 && <PasskeyStatusPage kind="fingerprint" />}
       {m.no === 37 && <PasskeyStatusPage kind="face" />}
-      {m.no === 38 && <PasskeysPage />}
-      {m.no === 39 && <MfaPage />}
+      {(m.no === 38 || m.no === 39) && guest && <p className="mt-6 rounded-lg bg-amber-500/10 p-3 text-sm text-amber-600">Fitur ini dinonaktifkan untuk akun Guest karena akun ini dipakai bersama. Daftar akun sendiri untuk mencobanya.</p>}
+      {m.no === 38 && !guest && <PasskeysPage />}
+      {m.no === 39 && !guest && <MfaPage />}
       {m.no === 40 && <AuditPage prefix="auth_" />}
       {m.no === 50 && <SupplyChainPage />}
       {m.no === 58 && <ApprovalPage />}

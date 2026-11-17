@@ -30,6 +30,9 @@ export default function LoginPage() {
       if (mode === "reset") { await authService.resetPassword(v.email); setMsg({ ok: true, text: "Jika email terdaftar, tautan reset sudah dikirim." }); }
     } catch (e) { setMsg({ ok: false, text: (e as Error).message }); }
   };
+  const guestEmail = import.meta.env.VITE_GUEST_EMAIL as string | undefined;
+  const guestPass = import.meta.env.VITE_GUEST_PASSWORD as string | undefined;
+  const guestLogin = async () => { setMsg(null); try { await authService.signIn(guestEmail!, guestPass!); } catch (e) { setMsg({ ok: false, text: (e as Error).message }); } };
   const input = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-900";
 
   return (
@@ -50,6 +53,15 @@ export default function LoginPage() {
         </div>
         {mode === "login" && authService.passkeysSupported() && (
           <button type="button" onClick={async () => { setMsg(null); try { await authService.signInWithPasskey(); } catch (e) { setMsg({ ok: false, text: (e as Error).message }); } }} className="w-full rounded-lg border border-accent py-2 text-sm font-medium text-accent">Masuk dengan passkey</button>
+        )}
+        {mode === "login" && guestEmail && guestPass && (
+          <div className="space-y-1 rounded-lg border border-dashed border-accent/60 bg-accent/5 p-3 text-xs">
+            <div className="font-semibold text-accent">Coba demo sebagai Guest</div>
+            <div>Email: <code className="select-all">{guestEmail}</code></div>
+            <div>Password: <code className="select-all">{guestPass}</code></div>
+            <div className="text-slate-500">Akun bersama, hanya-baca, berisi data demo.</div>
+            <button type="button" onClick={guestLogin} className="mt-1 w-full rounded-lg bg-accent py-1.5 font-medium text-white">Masuk sebagai Guest</button>
+          </div>
         )}
         <p className="text-[11px] text-slate-400">Passkey bersifat eksperimental dan hanya bisa dipakai setelah didaftarkan di Modul 38. Password tetap tersedia sebagai cadangan. Akun baru belum punya akses data sampai admin memberikannya.</p>
       </form>

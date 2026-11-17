@@ -54,3 +54,7 @@ payment posts Dr Cash / Cr AR; cancel posts a reversal (net effect 0); PO receip
 manual journal: viewer forbidden, unbalanced rejected, balanced accepted; direct writes to journals/bills denied; a deferred DB constraint rejects an unbalanced entry even for a superuser; trial balance balanced; anon denied.
 Limits: fixed default chart of accounts; no tax, multi-currency, period closing or fixed assets; expenses created later do NOT auto-post (use a manual journal); demo backfill has no COGS;
 journals exist only for transactions after this migration plus the demo backfill; role checks per company not per branch; UI not tested live.
+
+## Guest account (tested on fresh DB, 10 migrations)
+Guest = profile flag `is_guest` + Viewer role on demo companies. Verified: can read companies/customers/orders/journals/dashboard; every write path rejected (orders, payments, stock, journals, POs, direct inserts, approvals, flag change);
+sees no other users, no audit log; auth events not logged for guest; normal viewers unaffected. Residual risk: public credentials (password change / MFA enrolment via the Auth API) cannot be blocked from the database.
