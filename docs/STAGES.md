@@ -30,3 +30,4 @@ Built: collapsible sidebar (mobile drawer), application launcher (75 modules, st
 global search (Ctrl+K), notification and profile panels, module placeholder pages.
 Deliberately NOT built yet (no data source): company/branch selectors (disabled), dashboard widgets, charts,
 data tables, filters, modal forms, activity timeline, approval center -> come with Stages 3-8.
+| 19 | Language support (ID/EN): shell, launcher, login, dashboard, module pages; cross-module actions (12, 34, 48) | Phase 1. Many page-specific texts are not translated yet. Owner confirmed modules work; TESTING promoted to FUNCTIONAL |

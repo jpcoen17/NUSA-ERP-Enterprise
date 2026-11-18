@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { MODULES } from "@/lib/modules";
+import { useI18n } from "@/context/I18nContext";
 import RecordsPage from "@/pages/RecordsPage";
 import { MODULE_FORMS } from "@/lib/moduleForms";
 import BarcodePage from "@/pages/BarcodePage";
@@ -29,21 +30,23 @@ import OrgTablePage from "@/pages/OrgTablePage";
 import StatusBadge from "@/components/StatusBadge";
 
 // Modules with a dedicated page: the generic record store must NOT also render for them.
+const REAL = new Set([6, 7, 8, 9, 10, 13, 18, 21, 40, 50, 58, 61, 64, 66, 67, 68, 69]); // modules with dedicated server-side logic
 const CUSTOM = new Set([6, 7, 9, 10, 18, 25]);
 const TABLES: Record<number, string> = { 2: "companies", 3: "branches", 11: "customers", 16: "suppliers" };
 
 export default function ModulePage() {
   const guest = useGuest();
+  const { t, modName, groupName } = useI18n();
   const { no } = useParams();
   const m = MODULES.find((x) => x.no === Number(no));
-  if (!m) return <p>Module not found. <Link className="text-accent" to="/">Back to launcher</Link></p>;
+  if (!m) return <p>{t("module.notfound")} <Link className="text-accent" to="/">{t("module.back")}</Link></p>;
   return (
     <div className="mx-auto max-w-3xl">
-      <p className="text-xs text-slate-500">{m.group} {m.groupName} · Module #{m.no}</p>
-      <h1 className="mb-3 text-2xl font-semibold">{m.name}</h1>
+      <p className="text-xs text-slate-500">{m.group} {groupName(m.group, m.groupName)} · {t("module.label")} #{m.no}</p>
+      <h1 className="mb-3 text-2xl font-semibold">{modName(m)}</h1>
       <StatusBadge status={m.status} />
       <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-6 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300">
-        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([6, 7, 8, 9, 10, 21, 69, 13, 18, 40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
+        {t(m.status === "PLANNED" ? "module.msg.planned" : m.status === "FUNCTIONAL" || m.status === "TESTING" || m.status === "COMPLETE" ? (REAL.has(m.no) ? "module.msg.real" : "module.msg.basic") : "module.msg.dev")}
       </div>
       {m.no === 1 && <DashboardPage />}
       {m.no === 25 && <BarcodePage />}
@@ -59,7 +62,7 @@ export default function ModulePage() {
       {m.no === 13 && <SalesOrdersPage />}
       {m.no === 36 && <PasskeyStatusPage kind="fingerprint" />}
       {m.no === 37 && <PasskeyStatusPage kind="face" />}
-      {(m.no === 38 || m.no === 39) && guest && <p className="mt-6 rounded-lg bg-amber-500/10 p-3 text-sm text-amber-600">Fitur ini dinonaktifkan untuk akun Guest karena akun ini dipakai bersama. Daftar akun sendiri untuk mencobanya.</p>}
+      {(m.no === 38 || m.no === 39) && guest && <p className="mt-6 rounded-lg bg-amber-500/10 p-3 text-sm text-amber-600">{t("guest.disabled")}</p>}
       {m.no === 38 && !guest && <PasskeysPage />}
       {m.no === 39 && !guest && <MfaPage />}
       {m.no === 40 && <AuditPage prefix="auth_" />}
@@ -73,7 +76,7 @@ export default function ModulePage() {
       {m.no === 68 && <AuditPage />}
       {MODULE_FORMS[m.no] && !TABLES[m.no] && !CUSTOM.has(m.no) && <RecordsPage moduleNo={m.no} />}
       {TABLES[m.no] && <OrgTablePage table={TABLES[m.no]} />}
-      <Link to="/" className="mt-4 inline-block text-sm text-accent">← Back to launcher</Link>
+      <Link to="/" className="mt-4 inline-block text-sm text-accent">← {t("module.back")}</Link>
     </div>
   );
 }

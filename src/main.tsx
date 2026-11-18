@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import App from "@/app/App";
 import { AuthProvider } from "@/context/AuthContext";
+import { I18nProvider } from "@/context/I18nContext";
 import { CompanyProvider } from "@/context/CompanyContext";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/plus-jakarta-sans";
@@ -14,6 +15,7 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <I18nProvider>
       <AuthProvider>
         <CompanyProvider>
           <BrowserRouter>
@@ -21,6 +23,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           </BrowserRouter>
         </CompanyProvider>
       </AuthProvider>
+      </I18nProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

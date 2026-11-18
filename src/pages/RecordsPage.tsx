@@ -4,12 +4,20 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useCompany } from "@/context/CompanyContext";
 import { MODULE_FORMS } from "@/lib/moduleForms";
+import { useI18n } from "@/context/I18nContext";
 import RecordDialog, { type RecRow } from "@/components/RecordDialog";
 
 const PAGE = 25;
+// Cross-module links: a record becomes a real business event in another module (server-side function).
+const ACTIONS: Record<number, { rpc: string; label: string }> = {
+  12: { rpc: "convert_lead_to_customer", label: "action.convertLead" },
+  34: { rpc: "post_payroll", label: "action.postPayroll" },
+  48: { rpc: "complete_delivery", label: "action.completeDelivery" },
+};
 
 export default function RecordsPage({ moduleNo }: { moduleNo: number }) {
   const fields = MODULE_FORMS[moduleNo];
+  const { t } = useI18n();
   const cols = fields.slice(0, 5);
   const { selected } = useCompany();
   const qc = useQueryClient();
@@ -28,6 +36,10 @@ export default function RecordsPage({ moduleNo }: { moduleNo: number }) {
   const del = useMutation({
     mutationFn: async (id: string) => { const r = await supabase!.from("module_records").delete().eq("id", id); if (r.error) throw new Error(r.error.message); },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["records", moduleNo] }),
+  });
+  const link = useMutation({
+    mutationFn: async (id: string) => { const r = await supabase!.rpc(ACTIONS[moduleNo].rpc, { p_record: id }); if (r.error) throw new Error(r.error.message); },
+    onSuccess: () => ["records", "customers", "cust-opts", "dashboard", "journals", "trial-balance", "orders", "cash-ledger", "analytics", "sc"].forEach((k) => qc.invalidateQueries({ queryKey: [k] })),
   });
   const rows = (data?.data ?? []) as RecRow[];
   const fmt = (v: unknown, type: string) => (v === undefined || v === null ? "" : type === "number" ? new Intl.NumberFormat("id-ID").format(Number(v)) : String(v));
@@ -51,6 +63,7 @@ export default function RecordsPage({ moduleNo }: { moduleNo: number }) {
                 {cols.map((c) => <td key={c.key} className="px-3 py-2">{fmt(r.data[c.key], c.type)}</td>)}
                 <td className="px-3 py-2 text-xs">{r.status}</td>
                 <td className="flex gap-2 px-3 py-2">
+                  {ACTIONS[moduleNo] && r.status !== "done" && <button onClick={() => confirm(t("action.confirm")) && link.mutate(r.id)} className="rounded border border-accent px-2 text-[11px] text-accent">{t(ACTIONS[moduleNo].label)}</button>}
                   <button aria-label="Edit" onClick={() => setDialog({ row: r })}><Pencil size={14} /></button>
                   <button aria-label="Delete" onClick={() => confirm("Hapus record ini?") && del.mutate(r.id)}><Trash2 size={14} className="text-red-500" /></button>
                 </td>
@@ -59,6 +72,7 @@ export default function RecordsPage({ moduleNo }: { moduleNo: number }) {
           </table>
         </div>
       )}
+      {link.error && <p className="mt-2 text-xs text-red-500">{(link.error as Error).message}</p>}
       {del.error && <p className="mt-2 text-xs text-red-500">{(del.error as Error).message}</p>}
       <div className="mt-3 flex gap-2 text-xs">
         <button disabled={page === 0} onClick={() => setPage(page - 1)} className="rounded border px-3 py-1 disabled:opacity-40">Prev</button>

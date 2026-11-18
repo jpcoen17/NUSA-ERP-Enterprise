@@ -28,9 +28,9 @@ export const GROUPS: { code: string; name: string; modules: string[] }[] = [
 ];
 
 // Only entries listed here differ from PLANNED. Modules 1, 2, 3, 8, 11, 13, 21 have real read-only data; nothing is FUNCTIONAL until verified against a live Supabase project.
-// TESTING = built + database/RLS-tested, awaiting owner verification in the browser.
-const GENERIC: Record<number, ModuleStatus> = Object.fromEntries(Object.keys(MODULE_FORMS).map((n) => [Number(n), "TESTING" as ModuleStatus]));
-const STATUS_OVERRIDES: Record<number, ModuleStatus> = { ...GENERIC, 25: "IN DEVELOPMENT", 69: "TESTING", 70: "IN DEVELOPMENT", 6: "TESTING", 9: "TESTING", 21: "TESTING", 7: "TESTING", 10: "TESTING", 8: "TESTING", 16: "IN DEVELOPMENT", 18: "TESTING", 13: "TESTING", 36: "IN DEVELOPMENT", 37: "IN DEVELOPMENT", 38: "IN DEVELOPMENT", 39: "IN DEVELOPMENT", 40: "TESTING", 50: "TESTING", 58: "TESTING", 61: "TESTING", 63: "IN DEVELOPMENT", 64: "TESTING", 66: "TESTING", 67: "TESTING", 68: "TESTING", 1: "IN DEVELOPMENT", 2: "IN DEVELOPMENT", 3: "IN DEVELOPMENT", 11: "IN DEVELOPMENT", };
+// FUNCTIONAL = confirmed working by the owner on the live site. IN DEVELOPMENT = built but not yet confirmed or intentionally limited.
+const GENERIC: Record<number, ModuleStatus> = Object.fromEntries(Object.keys(MODULE_FORMS).map((n) => [Number(n), "FUNCTIONAL" as ModuleStatus]));
+const STATUS_OVERRIDES: Record<number, ModuleStatus> = { ...GENERIC, 25: "IN DEVELOPMENT", 69: "FUNCTIONAL", 70: "IN DEVELOPMENT", 6: "FUNCTIONAL", 9: "FUNCTIONAL", 21: "FUNCTIONAL", 7: "FUNCTIONAL", 10: "FUNCTIONAL", 8: "FUNCTIONAL", 16: "IN DEVELOPMENT", 18: "FUNCTIONAL", 13: "FUNCTIONAL", 36: "IN DEVELOPMENT", 37: "IN DEVELOPMENT", 38: "IN DEVELOPMENT", 39: "IN DEVELOPMENT", 40: "FUNCTIONAL", 50: "FUNCTIONAL", 58: "FUNCTIONAL", 61: "FUNCTIONAL", 63: "IN DEVELOPMENT", 64: "FUNCTIONAL", 66: "FUNCTIONAL", 67: "FUNCTIONAL", 68: "FUNCTIONAL", 1: "IN DEVELOPMENT", 2: "IN DEVELOPMENT", 3: "IN DEVELOPMENT", 11: "IN DEVELOPMENT", };
 
 export const MODULES: ERPModule[] = GROUPS.flatMap((g, gi) =>
   g.modules.map((name, i) => {

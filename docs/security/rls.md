@@ -72,3 +72,8 @@ Module 70 = JSON export only (no restore). Not threat detection: no failed-login
 ## Barcode & QR (module 25)
 Labels encode the product SKU (QR via `qrcode`, Code 128 via `jsbarcode`; SVG generated client-side). Scanning: native `BarcodeDetector` when available (Chrome/Android), otherwise `@zxing/browser` (loaded on demand); a text field also accepts USB/Bluetooth scanners (they type the code + Enter).
 Lookups go through normal RLS-protected queries (products by SKU; module_records code mapping). Camera needs HTTPS + browser permission. NOT tested live (camera, printing, iOS Safari behaviour unverified); only the build and QR generation were checked.
+
+## Cross-module links (modules 12->11, 34->6, 48->13) — fresh DB, 13 migrations
+`convert_lead_to_customer`, `post_payroll`, `complete_delivery` turn generic records into real events. Verified: role checks (viewer/guest forbidden), double execution rejected, lead creates a customer and is marked done+linked,
+payroll posts a balanced 3-line journal (Dr Operating Expenses 5,000,000 / Cr Cash 4,500,000 / Cr Payables 500,000) and rejects bad numbers, delivery completion delivers the confirmed sales order (draft/unknown/cancelled orders rejected), GL stays balanced, anon denied.
+Not yet linked: quotations->orders, purchase requisitions->POs, manufacturing->inventory, projects/timesheets->costing, helpdesk->customers, HR attendance->payroll.

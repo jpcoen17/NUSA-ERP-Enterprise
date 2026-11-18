@@ -1,3 +1,4 @@
+import { useI18n } from "@/context/I18nContext";
 import type { ModuleStatus } from "@/lib/modules";
 
 const STYLE: Record<ModuleStatus, string> = {
@@ -9,5 +10,6 @@ const STYLE: Record<ModuleStatus, string> = {
 };
 
 export default function StatusBadge({ status }: { status: ModuleStatus }) {
-  return <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide ${STYLE[status]}`}>{status}</span>;
+  const { t } = useI18n();
+  return <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide ${STYLE[status]}`}>{t("status." + status)}</span>;
 }
