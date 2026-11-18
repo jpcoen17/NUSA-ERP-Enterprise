@@ -68,3 +68,7 @@ Stock adjustment UI uses the already-tested `adjust_stock` (inventory role OK, g
 Verified on a clean system (0 serious issues, 26 tables) AND by planting a table without RLS + anon grant + definer function without search_path (all 4 detected). Viewer/guest forbidden, anon denied.
 `is_admin / has_company_access / has_branch_access` are now revoked from anon (authenticated app access verified unaffected).
 Module 70 = JSON export only (no restore). Not threat detection: no failed-login, IP or anomaly monitoring.
+
+## Barcode & QR (module 25)
+Labels encode the product SKU (QR via `qrcode`, Code 128 via `jsbarcode`; SVG generated client-side). Scanning: native `BarcodeDetector` when available (Chrome/Android), otherwise `@zxing/browser` (loaded on demand); a text field also accepts USB/Bluetooth scanners (they type the code + Enter).
+Lookups go through normal RLS-protected queries (products by SKU; module_records code mapping). Camera needs HTTPS + browser permission. NOT tested live (camera, printing, iOS Safari behaviour unverified); only the build and QR generation were checked.

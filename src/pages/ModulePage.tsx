@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { MODULES } from "@/lib/modules";
 import RecordsPage from "@/pages/RecordsPage";
 import { MODULE_FORMS } from "@/lib/moduleForms";
+import BarcodePage from "@/pages/BarcodePage";
 import SecurityPage from "@/pages/SecurityPage";
 import BackupPage from "@/pages/BackupPage";
 import InventoryPage from "@/pages/InventoryPage";
@@ -28,7 +29,7 @@ import OrgTablePage from "@/pages/OrgTablePage";
 import StatusBadge from "@/components/StatusBadge";
 
 // Modules with a dedicated page: the generic record store must NOT also render for them.
-const CUSTOM = new Set([6, 7, 9, 10, 18]);
+const CUSTOM = new Set([6, 7, 9, 10, 18, 25]);
 const TABLES: Record<number, string> = { 2: "companies", 3: "branches", 11: "customers", 16: "suppliers" };
 
 export default function ModulePage() {
@@ -45,6 +46,7 @@ export default function ModulePage() {
         {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([6, 7, 8, 9, 10, 21, 69, 13, 18, 40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
       </div>
       {m.no === 1 && <DashboardPage />}
+      {m.no === 25 && <BarcodePage />}
       {m.no === 69 && <SecurityPage />}
       {m.no === 70 && <BackupPage />}
       {m.no === 9 && <CashBankPage />}

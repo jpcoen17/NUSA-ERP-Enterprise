@@ -12,3 +12,8 @@ body { font-family: ui-sans-serif, system-ui, sans-serif; }
 }
 body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; font-feature-settings: "cv11", "ss01"; }
 h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
+@media print {
+  body * { visibility: hidden; }
+  #print-area, #print-area * { visibility: visible; }
+  #print-area { position: absolute; left: 0; top: 0; width: 100%; background: white; color: black; }
+}
