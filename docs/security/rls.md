@@ -62,3 +62,9 @@ sees no other users, no audit log; auth events not logged for guest; normal view
 ## Expenses / cash / inventory UI (modules 9, 21) — tested on fresh DB (11 migrations), RLS on 26 of 26 tables
 `record_expense` inserts the expense and posts Dr Operating Expenses / Cr Cash in one transaction. Verified: expense total +750000, cash -750000, journal balanced; viewer, guest and sales forbidden; zero/negative amount and blank category rejected; anon denied.
 Stock adjustment UI uses the already-tested `adjust_stock` (inventory role OK, guest forbidden). Limits: UI not tested live; no bank reconciliation, transfers between accounts or returns yet.
+
+## Security posture / backup (modules 69, 70) — fresh DB, 12 migrations
+`security_posture()` (Super Admin only) checks RLS coverage, anon table grants, security-definer functions (fixed search_path, anon-callable) and summarises users + 7-day audit activity.
+Verified on a clean system (0 serious issues, 26 tables) AND by planting a table without RLS + anon grant + definer function without search_path (all 4 detected). Viewer/guest forbidden, anon denied.
+`is_admin / has_company_access / has_branch_access` are now revoked from anon (authenticated app access verified unaffected).
+Module 70 = JSON export only (no restore). Not threat detection: no failed-login, IP or anomaly monitoring.

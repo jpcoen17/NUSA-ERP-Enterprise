@@ -2,6 +2,8 @@ import { Link, useParams } from "react-router-dom";
 import { MODULES } from "@/lib/modules";
 import RecordsPage from "@/pages/RecordsPage";
 import { MODULE_FORMS } from "@/lib/moduleForms";
+import SecurityPage from "@/pages/SecurityPage";
+import BackupPage from "@/pages/BackupPage";
 import InventoryPage from "@/pages/InventoryPage";
 import CashBankPage from "@/pages/CashBankPage";
 import GeneralLedgerPage from "@/pages/GeneralLedgerPage";
@@ -40,9 +42,11 @@ export default function ModulePage() {
       <h1 className="mb-3 text-2xl font-semibold">{m.name}</h1>
       <StatusBadge status={m.status} />
       <div className="mt-6 rounded-xl border border-dashed border-slate-300 p-6 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300">
-        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([6, 7, 8, 9, 10, 21, 13, 18, 40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
+        {m.status === "PLANNED" ? "This module is planned and has no functionality yet." : m.status === "TESTING" && ([6, 7, 8, 9, 10, 21, 69, 13, 18, 40, 50, 58, 61, 64, 66, 67, 68].includes(m.no)) ? "Real feature backed by server-side database functions with RLS. Built and database-tested; awaiting owner verification in the browser." : m.status === "TESTING" ? "Basic record keeping (add / edit / delete) stored in Supabase with RLS and audit log. No business workflow or approvals yet." : "In development: real data from Supabase. Not all create/edit features are built yet."}
       </div>
       {m.no === 1 && <DashboardPage />}
+      {m.no === 69 && <SecurityPage />}
+      {m.no === 70 && <BackupPage />}
       {m.no === 9 && <CashBankPage />}
       {m.no === 21 && <InventoryPage />}
       {m.no === 6 && <GeneralLedgerPage />}
